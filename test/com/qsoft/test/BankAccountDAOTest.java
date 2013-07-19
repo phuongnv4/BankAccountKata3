@@ -5,7 +5,6 @@ import android.test.AndroidTestCase;
 import com.qsoft.bank.BankAccountDAO;
 import com.qsoft.bank.BankAccountDTO;
 
-
 public class BankAccountDAOTest extends AndroidTestCase {
 
 	private BankAccountDAO bankaccountDAO;
@@ -16,29 +15,33 @@ public class BankAccountDAOTest extends AndroidTestCase {
 		bankaccountDAO = new BankAccountDAO(getContext(), null);
 	}
 
-	public void testInsertNewAccount() {
-		BankAccountDTO bankAccount = createBankAccount("0123456789");
+	// 1
+	public void testInsertBankAccountDTO() {
+		BankAccountDTO bankAccount = initBankAccountDTO("0123456789");
 		long result = bankaccountDAO.insert(bankAccount);
 		assertEquals(1, result);
 		assertEquals(1, bankaccountDAO.getRecordSize());
 	}
 
-	public void testGetBankAccountByAccountNumber() {
+	public void testGetBankAccountByAccountNumberAfterInsertToDB() {
 		String accountNumber = "0123456789";
-		BankAccountDTO bankAccount = createBankAccount(accountNumber);
+		BankAccountDTO bankAccount = initBankAccountDTO(accountNumber);
 		bankaccountDAO.insert(bankAccount);
 		BankAccountDTO bankAccountActual = bankaccountDAO.get(accountNumber);
 		assertTrue(null != bankAccountActual);
-//		assertTrue(bankAccount == bankAccountActual);
+		assertTrue(bankAccount.getAccountNumber().equals(
+				bankAccountActual.getAccountNumber()));
+		assertTrue(bankAccount.getBalance() == bankAccountActual.getBalance());
 	}
 
 	public void testInsertNewAccountDuplicateAccountNumber() throws Exception {
 		String accountNumber = "0123456789";
-		BankAccountDTO bankAccount = createBankAccount(accountNumber);
+		BankAccountDTO bankAccount = initBankAccountDTO(accountNumber);
 		bankaccountDAO.insert(bankAccount);
 
 		// insert Duplicate Account Number
-		bankAccount = createBankAccount(accountNumber);
+		accountNumber = "0123456789";
+		bankAccount = initBankAccountDTO(accountNumber);
 		bankaccountDAO.insert(bankAccount);
 
 		assertEquals(1, bankaccountDAO.getRecordSize());
@@ -47,7 +50,7 @@ public class BankAccountDAOTest extends AndroidTestCase {
 	public void testUpdateBankAccount() {
 		// add new
 		String accountNumber = "0123456789";
-		bankaccountDAO.insert(createBankAccount(accountNumber));
+		bankaccountDAO.insert(initBankAccountDTO(accountNumber));
 
 		// get to update
 		BankAccountDTO bankAccount = bankaccountDAO.get(accountNumber);
@@ -66,7 +69,7 @@ public class BankAccountDAOTest extends AndroidTestCase {
 		assertEquals(timeStamp, bankAccount.getTimeStamp());
 	}
 
-	private BankAccountDTO createBankAccount(String accountNumber) {
+	private BankAccountDTO initBankAccountDTO(String accountNumber) {
 		BankAccountDTO bankAccount = new BankAccountDTO(accountNumber);
 		bankAccount.setTimeStamp(System.currentTimeMillis());
 		bankAccount.setBalance(0);

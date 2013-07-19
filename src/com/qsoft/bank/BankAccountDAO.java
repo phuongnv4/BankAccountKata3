@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * @author quynhlt
@@ -21,7 +22,10 @@ public class BankAccountDAO {
 		long result = 0;
 		BankAccountDTO bankAccount = get(bankAccountDTO.getAccountNumber());
 		boolean notExisted = bankAccount == null ? true : false;
+		Log.e("notExisted 0=", notExisted + "");
 		if (notExisted) {
+			Log.e("notExisted 1=", notExisted + "");
+
 			ContentValues values = new ContentValues();
 			values.put(DBHelper.ACCOUNT_NUMBER,
 					bankAccountDTO.getAccountNumber());
