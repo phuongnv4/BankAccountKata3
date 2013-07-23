@@ -6,10 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-/**
- * @author quynhlt
- * 
- */
 public class BankAccountDAO {
 	private SQLiteDatabase db;
 
@@ -46,7 +42,7 @@ public class BankAccountDAO {
 				new String[] { bankAccountDTO.getAccountNumber() });
 	}
 
-	public int getRecordSize() {
+	public int getNumberRecordInAccountTable() {
 		String countQuery = "SELECT  * FROM " + DBHelper.TABLE_ACCOUNT;
 		Cursor cursor = db.rawQuery(countQuery, null);
 		return cursor.getCount();
